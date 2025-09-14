@@ -90,7 +90,7 @@ const handleSubmit = (e) => {
      <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-<div className="modal-overlay" onClick={() => setIsOpen(false)}>
+   <div className="modal" onClick={() => setIsOpen(false)}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSubmit}>
               <div>
