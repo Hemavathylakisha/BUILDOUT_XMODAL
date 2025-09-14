@@ -35,52 +35,52 @@ function App() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  const { username, email, dob, phone } = formData;
 
-    const { username, email, dob, phone } = formData;
+  // Username validation
+  if (!username) {
+    alert("Please fill out the Username field.");
+    return;
+  }
 
-    // 1. Check empty fields
-    if (!username) {
-      alert("Please fill out the Username field.");
-      return;
-    }
-    if (!email) {
-      alert("Please fill out the Email field.");
-      return;
-    }
-    if (!dob) {
-      alert("Please fill out the Date of Birth field.");
-      return;
-    }
-    if (!phone) {
-      alert("Please fill out the Phone field.");
-      return;
-    }
+  // Email validation
+  if (!email) {
+    alert("Please fill out the Email field.");
+    return;
+  }
+  if (!email.includes("@")) {
+    alert("Invalid email. Please check your email address.");
+    return;
+  }
 
-    // 2. Validate email
-    if (!email.includes("@")) {
-      alert("Invalid email. Please check your email address.");
-      return;
-    }
+  // DOB validation
+  if (!dob) {
+    alert("Please fill out the Date of Birth field.");
+    return;
+  }
+  const today = new Date();
+  const selectedDate = new Date(dob);
+  if (selectedDate > today) {
+    alert("Invalid date of birth. Please select a valid date.");
+    return;
+  }
 
-    // 3. Validate phone
-    if (!/^\d{10}$/.test(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
-      return;
-    }
+  // Phone validation
+  if (!phone) {
+    alert("Please fill out the Phone field.");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    alert("Invalid phone number. Please enter a 10-digit phone number.");
+    return;
+  }
 
-    // 4. Validate DOB
-    const today = new Date();
-    const selectedDate = new Date(dob);
-    if (selectedDate > today) {
-      alert("Invalid date of birth. Please select a valid date.");
-      return;
-    }
+  // Success: reset
+  setIsOpen(false);
+  setFormData({ username: "", email: "", dob: "", phone: "" });
+};
 
-    // All validations passed
-    setIsOpen(false); // close modal
-    setFormData({ username: "", email: "", dob: "", phone: "" }); // reset form
-  };
 
 
   return (
@@ -90,8 +90,8 @@ function App() {
       <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-        <div className="modal">
-          <div className="modal-content" ref={modalRef}>
+        <div className="modal" onClick={() => setIsOpen(false)}>
+          <div className="modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()} >
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
