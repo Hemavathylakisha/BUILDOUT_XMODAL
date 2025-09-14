@@ -1,97 +1,81 @@
-import { useState, useRef, useEffect} from 'react'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef(null);
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     dob: "",
-    phone: ""
+    phone: "",
   });
-
-  // Close modal when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const { username, email, dob, phone } = formData;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { username, email, dob, phone } = formData;
 
-  // Email validation
-  if (!email) {
-    alert("Please fill out the Email field.");
-    return;
-  }
-  if (!email.includes("@")) {
-    alert("Invalid email. Please check your email address.");
-    return;
-  }
+    // Email validation
+    if (!email) {
+      alert("Please fill out the Email field.");
+      return;
+    }
+    if (!email.includes("@")) {
+      alert("Invalid email. Please check your email address.");
+      return;
+    }
 
-  // Phone validation
-  if (!phone) {
-    alert("Please fill out the Phone field.");
-    return;
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    alert("Invalid phone number. Please enter a 10-digit phone number.");
-    return;
-  }
+    // Phone validation
+    if (!phone) {
+      alert("Please fill out the Phone field.");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
 
-  // DOB validation
-  if (!dob) {
-    alert("Please fill out the Date of Birth field.");
-    return;
-  }
-  const today = new Date();
-  const selectedDate = new Date(dob);
-  if (selectedDate > today) {
-    alert("Invalid date of birth. Please select a valid date.");
-    return;
-  }
+    // DOB validation
+    if (!dob) {
+      alert("Please fill out the Date of Birth field.");
+      return;
+    }
+    const today = new Date();
+    const selectedDate = new Date(dob);
+    if (selectedDate > today) {
+      alert("Invalid date of birth. Please select a valid date.");
+      return;
+    }
 
-  // Username validation
-  if (!username) {
-    alert("Please fill out the Username field.");
-    return;
-  }
+    // Username validation
+    if (!username) {
+      alert("Please fill out the Username field.");
+      return;
+    }
 
-  // Success
-  setIsOpen(false);
-  setFormData({ username: "", email: "", dob: "", phone: "" });
-};
-
-
+    // Success
+    setIsOpen(false);
+    setFormData({ username: "", email: "", dob: "", phone: "" });
+  };
 
   return (
-    <>
-      <div className="app">
-        <h2>User Details Modal</h2>
-     <button onClick={() => setIsOpen(true)}>Open Form</button>
+    <div className="app">
+      <h2>User Details Modal</h2>
+      <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-   <div className="modal" onClick={() => setIsOpen(false)}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal" onClick={() => setIsOpen(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
@@ -145,8 +129,7 @@ const handleSubmit = (e) => {
         </div>
       )}
     </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
