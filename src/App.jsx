@@ -90,11 +90,8 @@ const handleSubmit = (e) => {
       <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-  <div className="modal" onClick={() => setIsOpen(false)}>
-    <div
-      className="modal-content"
-      onClick={(e) => e.stopPropagation()} // prevent bubbling
-    >
+<div className="modal-overlay" onClick={() => setIsOpen(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
