@@ -34,15 +34,9 @@ function App() {
     });
   };
 
-  const handleSubmit = (e) => {
+const handleSubmit = (e) => {
   e.preventDefault();
   const { username, email, dob, phone } = formData;
-
-  // Username validation
-  if (!username) {
-    alert("Please fill out the Username field.");
-    return;
-  }
 
   // Email validation
   if (!email) {
@@ -51,6 +45,16 @@ function App() {
   }
   if (!email.includes("@")) {
     alert("Invalid email. Please check your email address.");
+    return;
+  }
+
+  // Phone validation
+  if (!phone) {
+    alert("Please fill out the Phone field.");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    alert("Invalid phone number. Please enter a 10-digit phone number.");
     return;
   }
 
@@ -66,17 +70,13 @@ function App() {
     return;
   }
 
-  // Phone validation
-  if (!phone) {
-    alert("Please fill out the Phone field.");
-    return;
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    alert("Invalid phone number. Please enter a 10-digit phone number.");
+  // Username validation
+  if (!username) {
+    alert("Please fill out the Username field.");
     return;
   }
 
-  // Success: reset
+  // Success
   setIsOpen(false);
   setFormData({ username: "", email: "", dob: "", phone: "" });
 };
@@ -90,8 +90,11 @@ function App() {
       <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-        <div className="modal" onClick={() => setIsOpen(false)}>
-          <div className="modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()} >
+  <div className="modal" onClick={() => setIsOpen(false)}>
+    <div
+      className="modal-content"
+      onClick={(e) => e.stopPropagation()} // prevent bubbling
+    >
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
