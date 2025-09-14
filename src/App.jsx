@@ -87,7 +87,7 @@ const handleSubmit = (e) => {
     <>
       <div className="app">
         <h2>User Details Modal</h2>
-      <button onClick={() => setIsOpen(true)}>Open Form</button>
+     <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
 <div className="modal-overlay" onClick={() => setIsOpen(false)}>
