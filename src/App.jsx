@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef(null); // added missing ref
 
   const [formData, setFormData] = useState({
     username: "",
@@ -65,17 +66,34 @@ function App() {
     setFormData({ username: "", email: "", dob: "", phone: "" });
   };
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+
+      // extra check for Cypress (#root click)
+      if (event.target.id === "root") {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
   return (
     <div className="app">
       <h2>User Details Modal</h2>
       <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-        <div className="modal" onClick={() => setIsOpen(false)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="modal" ref={modalRef} onClick={() => setIsOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
