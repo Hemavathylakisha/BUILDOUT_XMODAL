@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const modalContentRef = useRef(null); //ref for content box
+  const modalContentRef = useRef(null);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -59,24 +59,28 @@ function App() {
   };
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      // if click is outside modal content
-      if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-
-      // extra safety for Cypress (#root click)
+    function handleRootClick(event) {
+      // If clicking directly on #root, close modal
       if (event.target.id === "root") {
         setIsOpen(false);
       }
+
+      // If modal is open and click is outside content
+      if (
+        modalContentRef.current &&
+        !modalContentRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
     }
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
+    const rootEl = document.getElementById("root");
+    if (isOpen && rootEl) {
+      rootEl.addEventListener("click", handleRootClick);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      if (rootEl) rootEl.removeEventListener("click", handleRootClick);
+    };
   }, [isOpen]);
 
   return (
@@ -88,7 +92,7 @@ function App() {
         <div className="modal">
           <div
             className="modal-content"
-            ref={modalContentRef} // ref moved here
+            ref={modalContentRef}
             onClick={(e) => e.stopPropagation()}
           >
             <form onSubmit={handleSubmit}>
@@ -102,6 +106,7 @@ function App() {
                   className="form-control"
                 />
               </div>
+
               <div>
                 <label className="form-label">Email:</label>
                 <input
@@ -112,6 +117,7 @@ function App() {
                   className="form-control"
                 />
               </div>
+
               <div>
                 <label className="form-label">Date of Birth:</label>
                 <input
@@ -122,6 +128,7 @@ function App() {
                   className="form-control"
                 />
               </div>
+
               <div>
                 <label className="form-label">Phone:</label>
                 <input
@@ -132,6 +139,7 @@ function App() {
                   className="form-control"
                 />
               </div>
+
               <button type="submit" className="submit-button">
                 Submit
               </button>
