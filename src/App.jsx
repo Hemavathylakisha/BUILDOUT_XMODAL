@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef(null); // added missing ref
+  const modalContentRef = useRef(null); //ref for content box
 
   const [formData, setFormData] = useState({
     username: "",
@@ -23,7 +23,6 @@ function App() {
     e.preventDefault();
     const { username, email, dob, phone } = formData;
 
-    // Email validation
     if (!email) {
       alert("Please fill out the Email field.");
       return;
@@ -32,8 +31,6 @@ function App() {
       alert("Invalid email. Please check your email address.");
       return;
     }
-
-    // Phone validation
     if (!phone) {
       alert("Please fill out the Phone field.");
       return;
@@ -42,8 +39,6 @@ function App() {
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
-
-    // DOB validation
     if (!dob) {
       alert("Please fill out the Date of Birth field.");
       return;
@@ -54,25 +49,23 @@ function App() {
       alert("Invalid date of birth. Please select a valid date.");
       return;
     }
-
-    // Username validation
     if (!username) {
       alert("Please fill out the Username field.");
       return;
     }
 
-    // Success
     setIsOpen(false);
     setFormData({ username: "", email: "", dob: "", phone: "" });
   };
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+      // if click is outside modal content
+      if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
         setIsOpen(false);
       }
 
-      // extra check for Cypress (#root click)
+      // extra safety for Cypress (#root click)
       if (event.target.id === "root") {
         setIsOpen(false);
       }
@@ -92,8 +85,12 @@ function App() {
       <button onClick={() => setIsOpen(true)}>Open Form</button>
 
       {isOpen && (
-        <div className="modal" ref={modalRef} onClick={() => setIsOpen(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal">
+          <div
+            className="modal-content"
+            ref={modalContentRef} // ref moved here
+            onClick={(e) => e.stopPropagation()}
+          >
             <form onSubmit={handleSubmit}>
               <div>
                 <label className="form-label">Username:</label>
@@ -105,7 +102,6 @@ function App() {
                   className="form-control"
                 />
               </div>
-
               <div>
                 <label className="form-label">Email:</label>
                 <input
@@ -116,7 +112,6 @@ function App() {
                   className="form-control"
                 />
               </div>
-
               <div>
                 <label className="form-label">Date of Birth:</label>
                 <input
@@ -127,7 +122,6 @@ function App() {
                   className="form-control"
                 />
               </div>
-
               <div>
                 <label className="form-label">Phone:</label>
                 <input
@@ -138,7 +132,6 @@ function App() {
                   className="form-control"
                 />
               </div>
-
               <button type="submit" className="submit-button">
                 Submit
               </button>
